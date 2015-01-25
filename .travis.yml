@@ -1,0 +1,25 @@
+language: perl
+
+perl:
+   - "5.14"
+
+before_install:
+   - sudo apt-get update
+   - sudo apt-get upgrade
+   - sudo apt-get install libmojolicious-perl
+
+install:
+   - cpanm --quiet --notest Devel::Cover::Report::Coveralls
+
+script:
+    - PERL5OPT=-MDevel::Cover=-coverage,statement,branch,condition,path,subroutine prove -lrsv t
+    - cover
+
+after_success:
+    - cover -report coveralls
+
+notifications:
+  email:
+    - stephan@syntaktischer-zucker.de
+  on_success: always
+  on_failure: always
